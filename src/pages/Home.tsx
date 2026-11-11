@@ -54,13 +54,22 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // IMAGE SLIDER: CHANGE EVERY 3 SECONDS
   useEffect(() => {
     const interval = setInterval(() => {
       setStep((prev) => prev + 1);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // WITA CLOCK: UPDATE EVERY SECOND
+  useEffect(() => {
+    const clock = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(clock);
   }, []);
 
   const getImageIndex = (frameIndex: number) => {
@@ -73,7 +82,8 @@ export default function Home() {
   };
 
   return (
-    <main className="relative h-screen w-full overflow-hidden bg-white text-black transition-colors duration-300 dark:bg-[#111111] dark:text-white">
+    <main className="relative h-[100svh] w-full overflow-hidden bg-white text-black transition-colors duration-300 dark:bg-[#111111] dark:text-white">
+
       {/* NAVBAR */}
       <Navbar />
 
@@ -81,10 +91,11 @@ export default function Home() {
       <section
         className="
           absolute
-          left-[26.2%]
-          top-[14%]
-          w-[61%]
-          max-w-[850px]
+          left-1/2
+          top-[clamp(105px,14vh,150px)]
+          w-[min(92vw,850px,96vh)]
+          -translate-x-1/2
+          md:w-[min(61vw,850px,96vh)]
           aspect-[640/470]
         "
       >
@@ -122,7 +133,10 @@ export default function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    transition={{
+                      duration: 0.8,
+                      ease: "easeInOut",
+                    }}
                     className="absolute inset-0 h-full w-full"
                     style={{
                       objectFit: frame.fit as "cover" | "contain",
@@ -143,16 +157,15 @@ export default function Home() {
           bottom-[11.5%]
           left-[1.4%]
           z-10
-          max-w-[320px]
+          max-w-[min(320px,45vw)]
         "
       >
         <h1
           className="
-            text-[16px]
+            text-[clamp(10px,1.1vw,17px)]
             font-semibold
             leading-[1.3]
             tracking-[0.2em]
-            md:text-[17px]
           "
         >
           APSAGE.
@@ -167,24 +180,27 @@ export default function Home() {
         </h1>
       </div>
 
-      {/* COPYRIGHT */}
+      {/* COPYRIGHT - LEFT BOTTOM */}
       <div className="absolute bottom-[4%] left-[1.4%] z-10">
-        <p className="text-[9px] font-medium tracking-[0.18em] text-gray-400">
+        <p className="text-[clamp(7px,0.65vw,9px)] font-medium tracking-[0.18em] text-gray-400">
           © 2026 APSAGE
         </p>
       </div>
-      {/* DATE & TIME - BOTTOM RIGHT */}
+
+      {/* DATE & TIME - RIGHT BOTTOM */}
       <div className="absolute bottom-[4%] right-[1.4%] z-10 text-right">
-        <p className="text-[9px] font-medium tracking-[0.15em] text-gray-400">
-          {currentTime.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            timeZone: "Asia/Makassar",
-          }).toUpperCase()}
+        <p className="text-[clamp(7px,0.65vw,9px)] font-medium tracking-[0.15em] text-gray-400">
+          {currentTime
+            .toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              timeZone: "Asia/Makassar",
+            })
+            .toUpperCase()}
         </p>
 
-        <p className="mt-1 text-[11px] font-medium tracking-[0.12em] text-black dark:text-white">
+        <p className="mt-1 text-[clamp(8px,0.8vw,11px)] font-medium tracking-[0.12em] text-black dark:text-white">
           {currentTime.toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
@@ -194,6 +210,7 @@ export default function Home() {
           })} WITA
         </p>
       </div>
+
     </main>
   );
 }

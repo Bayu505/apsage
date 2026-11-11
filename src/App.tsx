@@ -7,11 +7,13 @@ import Collection from "./pages/Collection";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/collection" element={<Collection />} />
-      </Routes>
+      <div className="min-h-screen w-full">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/collection" element={<Collection />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

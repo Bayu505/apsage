@@ -16,26 +16,48 @@ export default function Navbar() {
     localStorage.setItem("apsage-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
+  // CLOSE MENUS WHEN SWITCHING TO DESKTOP
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const toggleTheme = () => {
     setDarkMode((prev) => !prev);
   };
 
   const navLinkClass = `
-    font-sans 
-    text-[13px] font-medium tracking-[0.08em]
+    whitespace-nowrap
+    font-sans
+    text-[clamp(11px,0.85vw,13px)]
+    font-medium
+    tracking-[0.08em]
     text-black dark:text-white
     transition-colors duration-300
     hover:text-gray-400 dark:hover:text-gray-400
   `;
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 px-5 pt-6 md:px-10 md:pt-8">
-      <nav className="relative mx-auto flex max-w-[1600px] items-center justify-between">
+    <header className="
+      absolute inset-x-0 top-0 z-50
+      px-[clamp(16px,3vw,48px)]
+      pt-[clamp(18px,2.2vw,32px)]
+    ">
+      <nav className="
+        relative mx-auto flex w-full max-w-[1800px]
+        items-center justify-between
+      ">
 
         {/* LOGO - LEFT */}
         <Link
           to="/"
-          className="relative z-10 flex items-center gap-2"
+          className="relative z-10 flex shrink-0 items-center gap-2"
           onClick={() => {
             setMobileOpen(false);
             setSocialOpen(false);
@@ -44,17 +66,28 @@ export default function Navbar() {
           <img
             src="/images/logo/LOGO APSAGE 2.jpg"
             alt="APSAGE"
-            className="h-9 w-9 rounded-md object-contain md:h-10 md:w-10"
+            className="
+              h-[clamp(30px,2.8vw,40px)]
+              w-[clamp(30px,2.8vw,40px)]
+              rounded-md object-contain
+            "
           />
 
-          <span className="text-xl font-black tracking-[-0.06em] text-black dark:text-white">
+          <span className="
+            text-[clamp(17px,1.5vw,21px)]
+            font-black tracking-[-0.06em]
+            text-black dark:text-white
+          ">
             APSAGE<span className="ml-0.5 text-[9px] align-top">®</span>
           </span>
         </Link>
 
         {/* DESKTOP MENU - CENTER */}
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 md:flex">
-
+        <div className="
+          absolute left-1/2 hidden -translate-x-1/2
+          items-center gap-[clamp(22px,3vw,42px)]
+          md:flex
+        ">
           <Link to="/collection" className={navLinkClass}>
             Collection
           </Link>
@@ -67,6 +100,7 @@ export default function Navbar() {
           <div className="relative">
             <button
               onClick={() => setSocialOpen(!socialOpen)}
+              aria-expanded={socialOpen}
               className={`${navLinkClass} flex items-center gap-2`}
             >
               Socials
@@ -118,7 +152,7 @@ export default function Navbar() {
         </div>
 
         {/* RIGHT ACTIONS */}
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex shrink-0 items-center gap-3">
 
           {/* DARK / LIGHT MODE */}
           <button
@@ -126,8 +160,10 @@ export default function Navbar() {
             aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             title={darkMode ? "Light Mode" : "Dark Mode"}
             className="
-              flex h-9 w-9 items-center justify-center
-              rounded-full border border-black/10
+              flex h-[clamp(32px,2.8vw,40px)]
+              w-[clamp(32px,2.8vw,40px)]
+              items-center justify-center rounded-full
+              border border-black/10
               text-black transition-all duration-300
               hover:bg-black hover:text-white
               dark:border-white/15 dark:text-white
@@ -145,6 +181,7 @@ export default function Navbar() {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation"
+            aria-expanded={mobileOpen}
             className="text-black dark:text-white md:hidden"
           >
             {mobileOpen ? (
@@ -159,6 +196,7 @@ export default function Navbar() {
         {mobileOpen && (
           <div className="
             absolute left-0 right-0 top-full mt-5
+            max-h-[calc(100dvh-100px)] overflow-y-auto
             rounded-xl border border-black/10
             bg-white/95 p-6 shadow-lg backdrop-blur-xl
             dark:border-white/10 dark:bg-[#171717]/95
